@@ -506,34 +506,34 @@ html.dark .ripple-el{ background:rgba(255,255,255,.12); }
   #printArea th, #printArea td{ border:1px solid #ccc; padding:8px 10px; font-size:12px; text-align:right; }
   #printArea th{ background:#eee; }
 }
-.alepo-map-wrap{ padding:0; display:flex; flex-direction:column; gap:10px; }
-.alepo-toolbar{ display:flex; flex-direction:column; gap:8px; }
-.alepo-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 1px; }
+.alepo-map-wrap{ padding:0; display:flex; flex-direction:column; gap:8px; height:100%; min-height:0; }
+.alepo-toolbar{ display:flex; flex-direction:column; gap:8px; flex:0 0 auto; }
+.alepo-toolbar-row{ display:flex; align-items:center; gap:8px; }
+.alepo-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 1px; flex:1; min-width:0; }
 .alepo-chip{ flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; transition:all .15s ease; white-space:nowrap; }
 .alepo-chip:active{ transform:scale(.96); }
 .alepo-chip.active{ background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 4px 10px rgba(15,110,92,0.25); }
 .alepo-chip .dot{ width:8px; height:8px; border-radius:50%; }
+.alepo-icon-btn{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; transition:transform .15s ease; box-shadow:0 2px 6px rgba(11,43,38,0.12); }
+.alepo-icon-btn:active{ transform:scale(.9); }
+.alepo-icon-btn.loading{ animation:alepoSpin 1s linear infinite; }
+@keyframes alepoSpin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
 .alepo-search-wrap{ position:relative; }
 .alepo-search-input{ width:100%; padding:11px 40px 11px 14px; border-radius:var(--radius-md); border:1px solid var(--line); background:var(--surface); font-size:14px; font-family:inherit; color:var(--ink); }
 .alepo-search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-pale); }
 .alepo-search-icon{ position:absolute; top:50%; right:14px; transform:translateY(-50%); color:var(--muted); font-size:15px; pointer-events:none; }
-.alepo-search-results{ position:absolute; top:calc(100% + 6px); right:0; left:0; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md); box-shadow:var(--shadow); max-height:260px; overflow-y:auto; z-index:1000; display:none; }
+.alepo-search-results{ position:absolute; top:calc(100% + 6px); right:0; left:0; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md); box-shadow:var(--shadow); max-height:260px; overflow-y:auto; z-index:2100; display:none; }
 .alepo-search-results.show{ display:block; }
 .alepo-result-item{ display:flex; align-items:center; gap:10px; padding:11px 14px; cursor:pointer; border-bottom:1px solid var(--line); font-size:13.5px; }
 .alepo-result-item:last-child{ border-bottom:none; }
 .alepo-result-item:active{ background:var(--primary-pale); }
 .alepo-result-icon{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex:0 0 auto; color:#fff; }
 .alepo-result-empty{ padding:16px; text-align:center; color:var(--muted); font-size:13px; }
-.alepo-map-shell{ position:relative; }
-.alepo-map{ width:100%; height:65vh; min-height:360px; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow); }
-.alepo-map-note{ display:flex; align-items:center; gap:8px; padding:2px 4px 0; font-size:12.5px; color:var(--muted); }
-.alepo-fab{ position:absolute; width:42px; height:42px; border-radius:50%; background:var(--surface); border:1px solid var(--line); box-shadow:0 4px 12px rgba(11,43,38,0.22); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; z-index:2000; transition:transform .15s ease; }
-.alepo-fab:active{ transform:scale(.92); }
-.alepo-fab-locate{ bottom:14px; left:14px; }
-.alepo-fab-reset{ bottom:64px; left:14px; }
-.alepo-fab.loading{ animation:alepoSpin 1s linear infinite; }
-@keyframes alepoSpin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
-.alepo-toast{ position:absolute; bottom:64px; right:14px; left:66px; background:var(--ink); color:#fff; padding:10px 14px; border-radius:var(--radius-md); font-size:12.5px; box-shadow:0 6px 16px rgba(0,0,0,.3); z-index:2000; opacity:0; transform:translateY(6px); pointer-events:none; transition:all .25s ease; }
+.alepo-map-shell{ position:relative; flex:1 1 auto; min-height:260px; }
+.alepo-map{ width:100%; height:100%; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow); }
+.alepo-map-note{ position:absolute; top:10px; right:10px; z-index:1500; display:flex; align-items:center; gap:6px; padding:5px 10px; font-size:11px; color:var(--ink); background:rgba(255,255,255,0.9); border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+html.dark .alepo-map-note{ background:rgba(20,30,28,0.85); color:#fff; }
+.alepo-toast{ position:absolute; bottom:14px; right:14px; left:14px; background:var(--ink); color:#fff; padding:10px 14px; border-radius:var(--radius-md); font-size:12.5px; box-shadow:0 6px 16px rgba(0,0,0,.3); z-index:2000; opacity:0; transform:translateY(6px); pointer-events:none; transition:all .25s ease; text-align:center; }
 .alepo-toast.show{ opacity:1; transform:translateY(0); }
 .alepo-pin{ width:32px; height:32px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,.4); border:2px solid #fff; animation:alepoDrop .35s ease both; }
 .alepo-pin.hospital{ background:var(--alert); }
@@ -550,7 +550,7 @@ html.dark .ripple-el{ background:rgba(255,255,255,.12); }
 .alepo-popup-btn{ display:inline-flex; align-items:center; gap:5px; background:var(--primary); color:#fff; padding:7px 12px; border-radius:999px; font-size:12.5px; font-weight:600; text-decoration:none; }
 html.dark .alepo-chip{ background:var(--surface); }
 html.dark .alepo-search-results{ background:var(--surface); }
-html.dark .alepo-fab{ background:var(--surface); }
+html.dark .alepo-icon-btn{ background:var(--surface); }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -852,11 +852,14 @@ const AR_EN = {
   'إعادة ضبط العرض': 'Reset view',
   'موقعي الحالي': 'My location',
   'تصوير قمر صناعي — كبّر واستكشف داخل حلب فقط': 'Satellite imagery — zoom and explore within Aleppo only',
+  'قمر صناعي': 'Satellite',
   'لا توجد نتائج مطابقة': 'No matching results',
   'مشفى': 'Hospital',
   'معلم': 'Landmark',
   'المتصفح لا يدعم تحديد الموقع': 'Your browser does not support location services',
   'أقرب مشفى': 'Nearest hospital',
+  'أنت خارج حلب حالياً — أقرب مشفى داخل المدينة': "You're currently outside Aleppo — nearest hospital inside the city",
+  'أنت خارج حلب حالياً': "You're currently outside Aleppo",
   'كم': 'km',
   'تعذر الوصول لموقعك، تحقق من إذن الموقع': "Couldn't access your location, check location permission",
   'الاتجاهات': 'Directions',
@@ -4098,10 +4101,14 @@ function renderMapTab(){
   return '' +
     '<div class="alepo-map-wrap">' +
       '<div class="alepo-toolbar">' +
-        '<div class="alepo-chips">' +
-          chip('all', T('الكل')) +
-          chip('hospitals', T('المشافي'), 'var(--alert)') +
-          chip('landmarks', T('المعالم'), 'var(--primary)') +
+        '<div class="alepo-toolbar-row">' +
+          '<div class="alepo-chips">' +
+            chip('all', T('الكل')) +
+            chip('hospitals', T('المشافي'), 'var(--alert)') +
+            chip('landmarks', T('المعالم'), 'var(--primary)') +
+          '</div>' +
+          '<div class="alepo-icon-btn" id="alepoLocateBtn" onclick="alepoLocateMe()" title="' + T('موقعي الحالي') + '">📍</div>' +
+          '<div class="alepo-icon-btn" id="alepoResetBtn" onclick="alepoResetView()" title="' + T('إعادة ضبط العرض') + '">🧭</div>' +
         '</div>' +
         '<div class="alepo-search-wrap">' +
           '<input type="text" id="alepoSearchInput" class="alepo-search-input" placeholder="' + T('ابحث عن مشفى أو معلم...') + '" autocomplete="off" oninput="alepoSearch(this.value)" onfocus="alepoSearch(this.value)">' +
@@ -4111,11 +4118,9 @@ function renderMapTab(){
       '</div>' +
       '<div class="alepo-map-shell">' +
         '<div id="alepoSatMap" class="alepo-map"></div>' +
-        '<div class="alepo-fab alepo-fab-reset" id="alepoResetBtn" onclick="alepoResetView()" title="' + T('إعادة ضبط العرض') + '">🧭</div>' +
-        '<div class="alepo-fab alepo-fab-locate" id="alepoLocateBtn" onclick="alepoLocateMe()" title="' + T('موقعي الحالي') + '">📍</div>' +
+        '<div class="alepo-map-note">📡 ' + T('قمر صناعي') + '</div>' +
         '<div class="alepo-toast" id="alepoToast"></div>' +
       '</div>' +
-      '<div class="alepo-map-note">📡 ' + T('تصوير قمر صناعي — كبّر واستكشف داخل حلب فقط') + '</div>' +
     '</div>';
 }
 
@@ -4207,15 +4212,25 @@ function alepoLocateMe(){
     const { latitude, longitude } = pos.coords;
     if(!_alepoMapInstance) return;
     if(_alepoUserMarker){ try{ _alepoMapInstance.removeLayer(_alepoUserMarker); }catch(e){} }
-    const userIcon = L.divIcon({ className:'alepo-user-icon', html:'<div class="alepo-user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9] });
-    _alepoUserMarker = L.marker([latitude, longitude], { icon:userIcon, zIndexOffset:1000 }).addTo(_alepoMapInstance);
-    _alepoMapInstance.flyTo([latitude, longitude], 15, { duration:0.9 });
     let nearest = null, nearestDist = Infinity;
     ALEPPO_HOSPITALS.forEach(h=>{
       const d = _alepoDistanceKm(latitude, longitude, h.lat, h.lng);
       if(d < nearestDist){ nearestDist = d; nearest = h; }
     });
-    if(nearest) _alepoShowToast('📍 ' + T('أقرب مشفى') + ': ' + nearest.name + ' — ' + nearestDist.toFixed(1) + ' ' + T('كم'));
+    const insideCity = _alepoCityBounds && _alepoCityBounds.contains([latitude, longitude]);
+    if(insideCity){
+      /* داخل حلب فعلاً — نحط نقطة موقعه ونطير الخريطة له مباشرة */
+      const userIcon = L.divIcon({ className:'alepo-user-icon', html:'<div class="alepo-user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9] });
+      _alepoUserMarker = L.marker([latitude, longitude], { icon:userIcon, zIndexOffset:1000 }).addTo(_alepoMapInstance);
+      _alepoMapInstance.flyTo([latitude, longitude], 15, { duration:0.9 });
+      if(nearest) _alepoShowToast('📍 ' + T('أقرب مشفى') + ': ' + nearest.name + ' — ' + nearestDist.toFixed(1) + ' ' + T('كم'));
+    } else {
+      /* خارج حلب — الخريطة محصورة بحدود المدينة فقط، فما نحرّكها لخارجها
+         (كان يسبب قفزة مزعجة للخارج ثم ارتداد فوري للداخل). بدلها نعرض
+         فقط أقرب مشفى ضمن المدينة، والخريطة تبقى ثابتة كما هي. */
+      if(nearest) _alepoShowToast('ℹ️ ' + T('أنت خارج حلب حالياً — أقرب مشفى داخل المدينة') + ': ' + nearest.name + ' (' + nearestDist.toFixed(0) + ' ' + T('كم') + ')');
+      else _alepoShowToast('ℹ️ ' + T('أنت خارج حلب حالياً'));
+    }
   };
   const onError = (err)=>{
     if(btn) btn.classList.remove('loading');
