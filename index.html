@@ -537,7 +537,8 @@ html.dark .alepo-tabsbar{ background:var(--surface); }
 /* دوّار الخريطة: عنصر أكبر من الحاوية المرئية ليمنع ظهور فراغات عند التدوير */
 .alepo-map-rotator{ position:absolute; top:50%; left:50%; width:145%; height:145%; transform-origin:center center; transform:translate(-50%,-50%) rotate(var(--map-rotate,0deg)); transition:transform .25s cubic-bezier(.25,.7,.4,1); }
 .alepo-map-rotator.dragging{ transition:none; }
-.alepo-map{ width:100%; height:100%; }
+.alepo-map{ width:100%; height:100%; cursor:grab; }
+.alepo-map.alepo-map-dragging{ cursor:grabbing; }
 .alepo-map .leaflet-control-container{ display:none; }
 
 .alepo-map-note{ position:absolute; top:10px; right:10px; z-index:1500; display:flex; align-items:center; gap:6px; padding:5px 10px; font-size:11px; font-weight:700; color:var(--ink); background:rgba(255,255,255,0.92); border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.15); cursor:pointer; user-select:none; }
@@ -565,13 +566,14 @@ html.dark .alepo-icon-btn{ background:var(--surface); }
 .alepo-zoom-group .alepo-icon-btn:last-child{ border-bottom:none; }
 
 /* بوصلة قابلة للسحب لتدوير الخريطة، والإبرة تشير دوماً للشمال الحقيقي */
-.alepo-compass{ width:44px; height:44px; border-radius:50%; background:var(--surface); border:1px solid var(--line); box-shadow:0 3px 10px rgba(11,43,38,0.22); display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; position:relative; }
+.alepo-compass{ width:50px; height:50px; border-radius:50%; background:radial-gradient(circle at 33% 28%, #ffffff, var(--surface) 68%); border:1px solid var(--line); box-shadow:0 4px 14px rgba(11,43,38,0.26), inset 0 0 0 1px rgba(255,255,255,.6); display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; position:relative; transition:transform .15s ease, box-shadow .15s ease; }
 .alepo-compass:active{ cursor:grabbing; }
-.alepo-compass-face{ width:100%; height:100%; border-radius:50%; position:relative; transform:rotate(calc(-1 * var(--map-rotate,0deg))); }
-.alepo-compass-n{ position:absolute; top:3px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:800; color:var(--alert); }
-.alepo-compass-needle{ position:absolute; top:50%; left:50%; width:3px; height:16px; margin:-16px 0 0 -1.5px; background:linear-gradient(var(--alert), var(--muted)); border-radius:2px; transform-origin:50% 16px; }
-.alepo-compass-dot{ width:5px; height:5px; border-radius:50%; background:var(--ink); }
-html.dark .alepo-compass-dot{ background:#fff; }
+.alepo-compass.dragging{ transform:scale(1.08); box-shadow:0 6px 20px rgba(11,43,38,0.34), inset 0 0 0 1px rgba(255,255,255,.6); }
+html.dark .alepo-compass{ background:radial-gradient(circle at 33% 28%, #2c4b44, var(--surface) 68%); }
+.alepo-compass-ring{ position:absolute; inset:4px; border-radius:50%; border:1px solid rgba(11,43,38,0.14); pointer-events:none; }
+html.dark .alepo-compass-ring{ border-color:rgba(255,255,255,0.16); }
+.alepo-compass-face{ width:100%; height:100%; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; transform:rotate(calc(-1 * var(--map-rotate,0deg))); }
+.alepo-compass-svg{ width:32px; height:32px; display:block; overflow:visible; }
 .alepo-compass-hint{ position:absolute; bottom:-18px; right:50%; transform:translateX(50%); font-size:9px; color:var(--muted); white-space:nowrap; opacity:0; transition:opacity .2s; pointer-events:none; }
 .alepo-compass.dragging .alepo-compass-hint{ opacity:1; }
 
@@ -598,8 +600,14 @@ html.dark .alepo-scale{ background:rgba(20,30,28,0.85); color:#fff; border-color
 .alepo-user-dot{ width:18px; height:18px; border-radius:50%; background:var(--sky); border:3px solid #fff; box-shadow:0 0 0 4px rgba(29,111,165,0.35), 0 2px 6px rgba(0,0,0,.35); position:relative; z-index:2; }
 .alepo-user-pulse{ position:absolute; top:50%; left:50%; width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; background:rgba(29,111,165,0.45); animation:alepoPulse 2s ease-out infinite; }
 @keyframes alepoPulse{ 0%{ transform:scale(1); opacity:.8;} 100%{ transform:scale(3.2); opacity:0;} }
-.leaflet-tooltip.alepo-marker-label{ font-family:inherit; font-size:12px; padding:3px 8px; border-radius:8px; }
+/* الحاوية الأصلية من Leaflet لا تدور مع الخريطة (فقط موقعها يتغيّر)، لذا
+   نجعلها شفافة تماماً وننقل كل الشكل المرئي (الخلفية/الظل/الحواف) إلى
+   الصندوق الداخلي .alepo-marker-label-box الذي يدور عكسياً مع النص، حتى
+   يبقى "المربع الأبيض" ملتصقاً بالكلمة دائماً مهما دارت الخريطة */
+.leaflet-tooltip.alepo-marker-label{ background:transparent; border:none; box-shadow:none; padding:0; font-family:inherit; font-size:12px; }
 .leaflet-tooltip.alepo-marker-label::before{ display:none !important; }
+.alepo-marker-label-box{ display:inline-block; background:var(--surface); color:var(--ink); padding:3px 9px; border-radius:8px; box-shadow:0 2px 7px rgba(11,43,38,0.22); white-space:nowrap; }
+html.dark .alepo-marker-label-box{ background:var(--surface); color:#fff; }
 .alepo-popup .leaflet-popup-content-wrapper{ border-radius:var(--radius-md); box-shadow:var(--shadow); }
 .alepo-popup .leaflet-popup-content{ margin:12px 14px; font-family:inherit; }
 .alepo-popup-inner{ transform:rotate(calc(-1 * var(--map-rotate,0deg))); transition:transform .25s cubic-bezier(.25,.7,.4,1); }
@@ -4210,10 +4218,18 @@ function renderMapTab(){
         '<div class="alepo-map-note" id="alepoLayerNote" onclick="alepoToggleLayer()">' + (isStreet ? '🗺️ ' + T('خريطة الشوارع') : '📡 ' + T('قمر صناعي')) + '</div>' +
         '<div class="alepo-fab-col tl">' +
           '<div class="alepo-compass" id="alepoCompass" title="' + T('اسحب للتدوير، انقر لإعادة الضبط') + '">' +
+            '<div class="alepo-compass-ring"></div>' +
             '<div class="alepo-compass-face">' +
-              '<span class="alepo-compass-n">N</span>' +
-              '<div class="alepo-compass-needle"></div>' +
-              '<div class="alepo-compass-dot"></div>' +
+              '<svg class="alepo-compass-svg" viewBox="0 0 36 36">' +
+                '<rect x="17.3" y="1.5" width="1.4" height="4.5" rx="0.7" style="fill:var(--muted)" opacity="0.55"></rect>' +
+                '<rect x="17.3" y="30" width="1.4" height="4.5" rx="0.7" style="fill:var(--muted)" opacity="0.55"></rect>' +
+                '<rect x="1.5" y="17.3" width="4.5" height="1.4" rx="0.7" style="fill:var(--muted)" opacity="0.55"></rect>' +
+                '<rect x="30" y="17.3" width="4.5" height="1.4" rx="0.7" style="fill:var(--muted)" opacity="0.55"></rect>' +
+                '<polygon points="18,6 22.5,18 18,16.2 13.5,18" fill="#e0433f"></polygon>' +
+                '<polygon points="18,30 22.5,18 18,19.8 13.5,18" fill="#9aa7ad"></polygon>' +
+                '<circle cx="18" cy="18" r="2.6" style="fill:var(--surface); stroke:#0b2b26" stroke-width="1.1"></circle>' +
+                '<text x="18" y="12.2" text-anchor="middle" font-size="6.6" font-weight="800" fill="#e0433f">N</text>' +
+              '</svg>' +
             '</div>' +
             '<div class="alepo-compass-hint">' + T('اسحب للتدوير') + '</div>' +
           '</div>' +
@@ -4383,32 +4399,118 @@ function _alepoWireCompass(){
     document.addEventListener('pointerup', up);
   };
 }
-function _alepoWireTwoFingerRotate(shellEl){
-  if(!shellEl) return;
-  let active = false, startAngle = 0, startRotation = 0;
-  function angleOfTouches(t){
-    return Math.atan2(t[1].clientY - t[0].clientY, t[1].clientX - t[0].clientX) * 180 / Math.PI;
+/* يستبدل سحب Leaflet الافتراضي (المعطّل عبر dragging:false) بمعالج واحد
+   يغطي: سحب بإصبع واحد/الفأرة لتحريك الخريطة، وإصبعين لتدويرها.
+   نقطة الإصلاح الأساسية: أي إزاحة على الشاشة (dx, dy) يجب تحويلها إلى
+   إزاحة "محلية" ضمن نظام إحداثيات الخريطة غير الدوّار (الذي تفهمه
+   Leaflet داخلياً عبر project/unproject) بعكس زاوية الدوران الحالية —
+   وإلا تتحرك الخريطة بزاوية أو باتجاه مغاير تماماً لاتجاه سحب الإصبع
+   الفعلي كلما كانت الخريطة مدوَّرة. */
+function _alepoWireMapGestures(shellEl){
+  if(!shellEl || !_alepoMapInstance) return;
+  const container = _alepoMapInstance.getContainer();
+  const rotator = document.getElementById('alepoMapRotator');
+  container.style.touchAction = 'none';
+  const pointers = new Map();
+  const DRAG_THRESHOLD = 3;
+  let mode = null;        /* 'pan' | 'rotate' */
+  let moved = false;
+  let panStart = null;    /* {x,y,centerPx} */
+  let rotateStart = null; /* {angle, rotation} */
+  let velocity = { x:0, y:0 };
+  let lastSample = { t:0, x:0, y:0 };
+
+  function screenDeltaToLocal(dxScreen, dyScreen){
+    const rad = _alepoRotation * Math.PI / 180;
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    return { x: dxScreen*cos + dyScreen*sin, y: -dxScreen*sin + dyScreen*cos };
   }
-  shellEl.addEventListener('touchstart', function(e){
-    if(e.touches.length === 2){
-      active = true;
-      startAngle = angleOfTouches(e.touches);
-      startRotation = _alepoRotation;
+  function angleBetween(p1, p2){
+    return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+  }
+  function startPan(x, y){
+    mode = 'pan';
+    moved = false;
+    panStart = { x, y, centerPx: _alepoMapInstance.project(_alepoMapInstance.getCenter(), _alepoMapInstance.getZoom()) };
+    velocity = { x:0, y:0 };
+    lastSample = { t: performance.now(), x, y };
+  }
+  function startRotate(){
+    container.classList.remove('alepo-map-dragging');
+    const pts = Array.from(pointers.values());
+    mode = 'rotate';
+    rotateStart = { angle: angleBetween(pts[0], pts[1]), rotation: _alepoRotation };
+    if(rotator) rotator.classList.add('dragging');
+  }
+  function endGesture(){
+    if(mode === 'pan' && moved){
+      const local = screenDeltaToLocal(velocity.x, velocity.y);
+      const flingX = local.x * 160, flingY = local.y * 160;
+      if(Math.hypot(flingX, flingY) > 24){
+        _alepoMapInstance.panBy([flingX, flingY], { animate:true, duration:.5, easeLinearity:.22, noMoveStart:true });
+      }
     }
-  }, { passive:true });
-  shellEl.addEventListener('touchmove', function(e){
-    if(active && e.touches.length === 2){
-      const ang = angleOfTouches(e.touches);
-      _alepoApplyRotation(startRotation + (ang - startAngle), true);
+    if(rotator) rotator.classList.remove('dragging');
+    container.classList.remove('alepo-map-dragging');
+    mode = null; panStart = null; rotateStart = null; moved = false;
+  }
+
+  container.addEventListener('pointerdown', function(e){
+    if(e.button !== undefined && e.button > 0) return;
+    pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    try{ container.setPointerCapture(e.pointerId); }catch(err){}
+    if(pointers.size === 1) startPan(e.clientX, e.clientY);
+    else if(pointers.size === 2) startRotate();
+  });
+
+  container.addEventListener('pointermove', function(e){
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+
+    if(mode === 'rotate' && pointers.size === 2){
+      const pts = Array.from(pointers.values());
+      const ang = angleBetween(pts[0], pts[1]);
+      _alepoApplyRotation(rotateStart.rotation + (ang - rotateStart.angle), true);
+      return;
     }
-  }, { passive:true });
-  shellEl.addEventListener('touchend', function(e){
-    if(active && e.touches.length < 2){
-      active = false;
-      const rotator = document.getElementById('alepoMapRotator');
+    if(mode === 'pan' && pointers.size === 1){
+      const dxScreen = e.clientX - panStart.x;
+      const dyScreen = e.clientY - panStart.y;
+      if(!moved){
+        if(Math.abs(dxScreen) < DRAG_THRESHOLD && Math.abs(dyScreen) < DRAG_THRESHOLD) return;
+        moved = true;
+        container.classList.add('alepo-map-dragging');
+        if(rotator) rotator.classList.add('dragging');
+      }
+      const local = screenDeltaToLocal(dxScreen, dyScreen);
+      const newCenterPx = panStart.centerPx.subtract(L.point(local.x, local.y));
+      const newCenter = _alepoMapInstance.unproject(newCenterPx, _alepoMapInstance.getZoom());
+      _alepoMapInstance.setView(newCenter, _alepoMapInstance.getZoom(), { animate:false });
+
+      const now = performance.now();
+      const dt = now - lastSample.t;
+      if(dt > 6){
+        velocity.x = (e.clientX - lastSample.x) / dt;
+        velocity.y = (e.clientY - lastSample.y) / dt;
+        lastSample = { t: now, x:e.clientX, y:e.clientY };
+      }
+    }
+  });
+
+  function release(e){
+    if(!pointers.has(e.pointerId)) return;
+    pointers.delete(e.pointerId);
+    try{ container.releasePointerCapture(e.pointerId); }catch(err){}
+    if(pointers.size === 0){
+      endGesture();
+    } else if(pointers.size === 1 && mode === 'rotate'){
       if(rotator) rotator.classList.remove('dragging');
+      const remaining = Array.from(pointers.values())[0];
+      startPan(remaining.x, remaining.y);
     }
-  }, { passive:true });
+  }
+  container.addEventListener('pointerup', release);
+  container.addEventListener('pointercancel', release);
 }
 
 function alepoSearch(q){
@@ -4582,7 +4684,12 @@ function initAlepoMap(){
   const cityBounds = L.latLngBounds(ALEPPO_CITY_BOUNDS);
   _alepoCityBounds = cityBounds;
 
-  _alepoMapInstance = L.map('alepoSatMap', { zoomControl:false, attributionControl:false });
+  /* dragging:false — سحب Leaflet الافتراضي يعتمد على إحداثيات الشاشة
+     الخام ولا يعرف شيئاً عن دوران الحاوية (--map-rotate)، فكان يحرّك
+     الخريطة بزاوية أو باتجاه مغاير لاتجاه الإصبع الفعلي كلما دارت
+     الخريطة. نستبدله بمعالج مخصص في _alepoWireMapGestures يعوّض عن زاوية
+     الدوران دائماً */
+  _alepoMapInstance = L.map('alepoSatMap', { zoomControl:false, attributionControl:false, dragging:false });
 
   _alepoSatLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
@@ -4622,7 +4729,7 @@ function initAlepoMap(){
     const layer = isHospital ? _alepoHospitalsLayer : _alepoLandmarksLayer;
     const m = L.marker([item.lat, item.lng], { icon:pinIcon })
       .addTo(layer)
-      .bindTooltip('<span class="alepo-cr">' + escapeHtml(item.name) + '</span>', { permanent:false, direction:'top', offset:[0,-16], className:'alepo-marker-label' })
+      .bindTooltip('<span class="alepo-cr alepo-marker-label-box">' + escapeHtml(item.name) + '</span>', { permanent:false, direction:'top', offset:[0,-16], className:'alepo-marker-label' })
       .bindPopup(_alepoPopupHtml(item, isHospital), { className:'alepo-popup', closeButton:true });
     _alepoMarkers.push(m);
     _alepoAllPlaces.push({ name:item.name, lat:item.lat, lng:item.lng, type:isHospital?'hospital':'landmark', icon:item.icon||'📍', marker:m });
@@ -4648,7 +4755,7 @@ function initAlepoMap(){
   _alepoApplyRotation(_alepoRotation, false);
   _alepoWireCompass();
   const shellEl = document.getElementById('alepoMapShell');
-  _alepoWireTwoFingerRotate(shellEl);
+  _alepoWireMapGestures(shellEl);
 
   /* الحاوية مبنية داخل عنصر بدأ height:0 لحظة التهيئة أحياناً (قبل انتهاء
      الرسم)، فنطلب من Leaflet يعيد حساب المقاس بعد الإطار التالي لضمان
