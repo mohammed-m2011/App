@@ -508,16 +508,17 @@ html.dark .ripple-el{ background:rgba(255,255,255,.12); }
 }
 .alepo-map-wrap{ padding:0; display:flex; flex-direction:column; gap:8px; height:100%; min-height:0; }
 .alepo-toolbar{ display:flex; flex-direction:column; gap:8px; flex:0 0 auto; }
-.alepo-toolbar-row{ display:flex; align-items:center; gap:8px; }
-.alepo-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 1px; flex:1; min-width:0; }
-.alepo-chip{ flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; transition:all .15s ease; white-space:nowrap; }
-.alepo-chip:active{ transform:scale(.96); }
-.alepo-chip.active{ background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 4px 10px rgba(15,110,92,0.25); }
-.alepo-chip .dot{ width:8px; height:8px; border-radius:50%; }
-.alepo-icon-btn{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; transition:transform .15s ease; box-shadow:0 2px 6px rgba(11,43,38,0.12); }
-.alepo-icon-btn:active{ transform:scale(.9); }
-.alepo-icon-btn.loading{ animation:alepoSpin 1s linear infinite; }
-@keyframes alepoSpin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+/* ---------- موحّد: كل تبويبات/أزرار الشريط العلوي بنفس الخط والخانة ---------- */
+.alepo-tabsbar{ display:flex; align-items:stretch; gap:6px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md); padding:4px; box-shadow:0 2px 8px rgba(11,43,38,0.08); }
+.alepo-chips{ display:flex; gap:5px; overflow-x:auto; flex:1; min-width:0; }
+.alepo-chip, .alepo-tab-action{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:5px; height:38px; padding:0 13px; border-radius:10px; background:transparent; border:none; color:var(--muted); font-size:12.5px; font-family:inherit; font-weight:700; cursor:pointer; transition:all .15s ease; white-space:nowrap; }
+.alepo-chip:active, .alepo-tab-action:active{ transform:scale(.96); }
+.alepo-chip.active, .alepo-tab-action.active{ background:var(--primary); color:#fff; box-shadow:0 4px 10px rgba(15,110,92,0.25); }
+.alepo-chip .dot{ width:7px; height:7px; border-radius:50%; }
+.alepo-tabsbar-sep{ width:1px; flex:0 0 auto; background:var(--line); margin:5px 1px; }
+.alepo-tab-action .ic{ font-size:15px; line-height:1; }
+html.dark .alepo-tabsbar{ background:var(--surface); }
+
 .alepo-search-wrap{ position:relative; }
 .alepo-search-input{ width:100%; padding:11px 40px 11px 14px; border-radius:var(--radius-md); border:1px solid var(--line); background:var(--surface); font-size:14px; font-family:inherit; color:var(--ink); }
 .alepo-search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-pale); }
@@ -528,29 +529,87 @@ html.dark .ripple-el{ background:rgba(255,255,255,.12); }
 .alepo-result-item:last-child{ border-bottom:none; }
 .alepo-result-item:active{ background:var(--primary-pale); }
 .alepo-result-icon{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; flex:0 0 auto; color:#fff; }
+.alepo-result-dist{ margin-inline-start:auto; font-size:11px; color:var(--muted); font-weight:700; flex:0 0 auto; }
 .alepo-result-empty{ padding:16px; text-align:center; color:var(--muted); font-size:13px; }
-.alepo-map-shell{ position:relative; flex:1 1 auto; min-height:260px; }
-.alepo-map{ width:100%; height:100%; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow); }
-.alepo-map-note{ position:absolute; top:10px; right:10px; z-index:1500; display:flex; align-items:center; gap:6px; padding:5px 10px; font-size:11px; color:var(--ink); background:rgba(255,255,255,0.9); border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+
+.alepo-map-shell{ position:relative; flex:1 1 auto; min-height:280px; overflow:hidden; border-radius:var(--radius-lg); border:1px solid var(--line); box-shadow:var(--shadow); background:var(--canvas); transition:border-radius .25s ease; }
+.alepo-map-shell.fullscreen{ position:fixed; inset:0; z-index:5000; border-radius:0; height:100vh !important; width:100vw !important; }
+/* دوّار الخريطة: عنصر أكبر من الحاوية المرئية ليمنع ظهور فراغات عند التدوير */
+.alepo-map-rotator{ position:absolute; top:50%; left:50%; width:145%; height:145%; transform-origin:center center; transform:translate(-50%,-50%) rotate(var(--map-rotate,0deg)); transition:transform .25s cubic-bezier(.25,.7,.4,1); }
+.alepo-map-rotator.dragging{ transition:none; }
+.alepo-map{ width:100%; height:100%; }
+.alepo-map .leaflet-control-container{ display:none; }
+
+.alepo-map-note{ position:absolute; top:10px; right:10px; z-index:1500; display:flex; align-items:center; gap:6px; padding:5px 10px; font-size:11px; font-weight:700; color:var(--ink); background:rgba(255,255,255,0.92); border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.15); cursor:pointer; user-select:none; }
+.alepo-map-note:active{ transform:scale(.96); }
 html.dark .alepo-map-note{ background:rgba(20,30,28,0.85); color:#fff; }
+
 .alepo-toast{ position:absolute; bottom:14px; right:14px; left:14px; background:var(--ink); color:#fff; padding:10px 14px; border-radius:var(--radius-md); font-size:12.5px; box-shadow:0 6px 16px rgba(0,0,0,.3); z-index:2000; opacity:0; transform:translateY(6px); pointer-events:none; transition:all .25s ease; text-align:center; }
 .alepo-toast.show{ opacity:1; transform:translateY(0); }
+
+/* ---------- أزرار عائمة على الخريطة (كلها بنفس المقاس والخط) ---------- */
+.alepo-fab-col{ position:absolute; z-index:1500; display:flex; flex-direction:column; gap:8px; }
+.alepo-fab-col.tl{ top:12px; left:12px; align-items:flex-start; }
+.alepo-fab-col.br{ bottom:14px; right:12px; align-items:flex-end; }
+.alepo-fab-row{ display:flex; align-items:center; gap:8px; }
+.alepo-icon-btn{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:16px; font-family:inherit; cursor:pointer; transition:transform .15s ease, background .15s ease; box-shadow:0 2px 6px rgba(11,43,38,0.18); touch-action:none; }
+.alepo-icon-btn:active{ transform:scale(.9); }
+.alepo-icon-btn.loading{ animation:alepoSpin 1s linear infinite; }
+.alepo-icon-btn.active{ background:var(--primary); color:#fff; border-color:var(--primary); }
+html.dark .alepo-icon-btn{ background:var(--surface); }
+@keyframes alepoSpin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
+
+/* زوم مخصص (بدل أدوات Leaflet الافتراضية التي كانت ستدور مع الخريطة) */
+.alepo-zoom-group{ display:flex; flex-direction:column; border-radius:12px; overflow:hidden; box-shadow:0 2px 6px rgba(11,43,38,0.18); }
+.alepo-zoom-group .alepo-icon-btn{ border-radius:0; box-shadow:none; border-bottom:1px solid var(--line); }
+.alepo-zoom-group .alepo-icon-btn:last-child{ border-bottom:none; }
+
+/* بوصلة قابلة للسحب لتدوير الخريطة، والإبرة تشير دوماً للشمال الحقيقي */
+.alepo-compass{ width:44px; height:44px; border-radius:50%; background:var(--surface); border:1px solid var(--line); box-shadow:0 3px 10px rgba(11,43,38,0.22); display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; position:relative; }
+.alepo-compass:active{ cursor:grabbing; }
+.alepo-compass-face{ width:100%; height:100%; border-radius:50%; position:relative; transform:rotate(calc(-1 * var(--map-rotate,0deg))); }
+.alepo-compass-n{ position:absolute; top:3px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:800; color:var(--alert); }
+.alepo-compass-needle{ position:absolute; top:50%; left:50%; width:3px; height:16px; margin:-16px 0 0 -1.5px; background:linear-gradient(var(--alert), var(--muted)); border-radius:2px; transform-origin:50% 16px; }
+.alepo-compass-dot{ width:5px; height:5px; border-radius:50%; background:var(--ink); }
+html.dark .alepo-compass-dot{ background:#fff; }
+.alepo-compass-hint{ position:absolute; bottom:-18px; right:50%; transform:translateX(50%); font-size:9px; color:var(--muted); white-space:nowrap; opacity:0; transition:opacity .2s; pointer-events:none; }
+.alepo-compass.dragging .alepo-compass-hint{ opacity:1; }
+
+/* شارة "موقعي الحالي" تظهر بجانب زر تحديد الموقع */
+.alepo-loc-badge{ max-width:52vw; background:var(--surface); border:1px solid var(--line); color:var(--ink); font-size:11.5px; font-weight:700; padding:0 12px; height:38px; border-radius:999px; box-shadow:0 2px 8px rgba(11,43,38,0.18); display:none; align-items:center; gap:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; animation:alepoBadgeIn .2s ease both; }
+.alepo-loc-badge.show{ display:flex; }
+@keyframes alepoBadgeIn{ from{ opacity:0; transform:translateX(8px);} to{ opacity:1; transform:translateX(0);} }
+html.dark .alepo-loc-badge{ background:var(--surface); }
+
+/* مقياس رسم مخصص ثابت لا يدور مع الخريطة */
+.alepo-scale{ position:absolute; bottom:14px; left:12px; z-index:1500; background:rgba(255,255,255,0.9); color:var(--ink); font-size:10.5px; font-weight:700; padding:3px 8px; border:2px solid var(--ink); border-top:none; border-radius:0 0 4px 4px; }
+html.dark .alepo-scale{ background:rgba(20,30,28,0.85); color:#fff; border-color:#fff; }
+
+.alepo-pin-counter{ transform:rotate(calc(-1 * var(--map-rotate,0deg))); transform-origin:50% 97%; transition:transform .25s cubic-bezier(.25,.7,.4,1); }
+.alepo-map-rotator.dragging .alepo-pin-counter{ transition:none; }
+.alepo-cr{ display:inline-block; transform:rotate(calc(-1 * var(--map-rotate,0deg))); transition:transform .25s cubic-bezier(.25,.7,.4,1); }
+.alepo-map-rotator.dragging .alepo-cr{ transition:none; }
 .alepo-pin{ width:32px; height:32px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,.4); border:2px solid #fff; animation:alepoDrop .35s ease both; }
 .alepo-pin.hospital{ background:var(--alert); }
 .alepo-pin.landmark{ background:var(--primary); }
 .alepo-pin-emoji{ transform:rotate(45deg); font-size:15px; }
 @keyframes alepoDrop{ from{ transform:rotate(-45deg) translateY(-14px); opacity:0;} to{ transform:rotate(-45deg) translateY(0); opacity:1;} }
-.alepo-user-dot{ width:18px; height:18px; border-radius:50%; background:var(--sky); border:3px solid #fff; box-shadow:0 0 0 4px rgba(29,111,165,0.35), 0 2px 6px rgba(0,0,0,.35); }
+.alepo-user-wrap{ transform:rotate(calc(-1 * var(--map-rotate,0deg))); }
+.alepo-user-dot{ width:18px; height:18px; border-radius:50%; background:var(--sky); border:3px solid #fff; box-shadow:0 0 0 4px rgba(29,111,165,0.35), 0 2px 6px rgba(0,0,0,.35); position:relative; z-index:2; }
+.alepo-user-pulse{ position:absolute; top:50%; left:50%; width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; background:rgba(29,111,165,0.45); animation:alepoPulse 2s ease-out infinite; }
+@keyframes alepoPulse{ 0%{ transform:scale(1); opacity:.8;} 100%{ transform:scale(3.2); opacity:0;} }
 .leaflet-tooltip.alepo-marker-label{ font-family:inherit; font-size:12px; padding:3px 8px; border-radius:8px; }
 .leaflet-tooltip.alepo-marker-label::before{ display:none !important; }
 .alepo-popup .leaflet-popup-content-wrapper{ border-radius:var(--radius-md); box-shadow:var(--shadow); }
 .alepo-popup .leaflet-popup-content{ margin:12px 14px; font-family:inherit; }
+.alepo-popup-inner{ transform:rotate(calc(-1 * var(--map-rotate,0deg))); transition:transform .25s cubic-bezier(.25,.7,.4,1); }
+.alepo-map-rotator.dragging .alepo-popup-inner{ transition:none; }
 .alepo-popup-title{ font-weight:700; font-size:14px; color:var(--ink); margin-bottom:2px; }
 .alepo-popup-sub{ font-size:12px; color:var(--muted); margin-bottom:8px; }
-.alepo-popup-btn{ display:inline-flex; align-items:center; gap:5px; background:var(--primary); color:#fff; padding:7px 12px; border-radius:999px; font-size:12.5px; font-weight:600; text-decoration:none; }
-html.dark .alepo-chip{ background:var(--surface); }
+.alepo-popup-actions{ display:flex; gap:6px; }
+.alepo-popup-btn{ display:inline-flex; align-items:center; gap:5px; background:var(--primary); color:#fff; padding:7px 12px; border-radius:999px; font-size:12.5px; font-weight:600; text-decoration:none; border:none; cursor:pointer; font-family:inherit; }
+.alepo-popup-btn.secondary{ background:var(--sky); }
 html.dark .alepo-search-results{ background:var(--surface); }
-html.dark .alepo-icon-btn{ background:var(--surface); }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -863,6 +922,24 @@ const AR_EN = {
   'كم': 'km',
   'تعذر الوصول لموقعك، تحقق من إذن الموقع': "Couldn't access your location, check location permission",
   'الاتجاهات': 'Directions',
+  'خريطة الشوارع': 'Street map',
+  'نوع الخريطة': 'Map type',
+  'ملء الشاشة': 'Fullscreen',
+  'إنهاء ملء الشاشة': 'Exit fullscreen',
+  'تكبير': 'Zoom in',
+  'تصغير': 'Zoom out',
+  'اسحب للتدوير، انقر لإعادة الضبط': 'Drag to rotate, tap to reset north',
+  'اسحب للتدوير': 'Drag to rotate',
+  'جارٍ التحديد...': 'Locating...',
+  'موقعك الحالي': 'Your current location',
+  'خط الاتجاه لأقرب مشفى': 'Direction to nearest hospital',
+  'إخفاء خط الاتجاه': 'Hide direction line',
+  'دقة الموقع تقريباً': 'Approximate accuracy',
+  'م': 'm',
+  'حدد موقعك أولاً': 'Locate yourself first',
+  'خط على الخريطة': 'Route line',
+  'نسخ الإحداثيات': 'Copy coordinates',
+  'تم نسخ الإحداثيات': 'Coordinates copied',
   'الموقع يتطلب فتح التطبيق عبر رابط HTTPS آمن، وليس بفتح الملف مباشرة': 'Location requires opening the app over a secure HTTPS link, not by opening the file directly',
   'تم رفض إذن الموقع — فعّله من إعدادات المتصفح لهذا الموقع ثم أعد المحاولة': 'Location permission was denied — enable it in your browser settings for this site and try again',
   'تعذر تحديد موقعك حالياً، تحقق من تفعيل خدمة الموقع (GPS) بجوالك': "Couldn't determine your location, check that GPS/location service is enabled on your phone",
@@ -4090,6 +4167,13 @@ let _alepoUserMarker = null;
 let _alepoCityBounds = null;
 let _alepoAllPlaces = [];
 let _alepoToastTimer = null;
+/* حالة إضافية تبقى محفوظة بين إعادة بناء تبويبة الخريطة (تدوير/نوع الطبقة) */
+let _alepoRotation = 0;
+let _alepoLayerMode = 'sat';
+let _alepoSatLayer = null;
+let _alepoStreetLayer = null;
+let _alepoAccuracyCircle = null;
+let _alepoDirectionLine = null;
 
 function renderMapTab(){
   const f = state.mapFilter || 'all';
@@ -4098,17 +4182,20 @@ function renderMapTab(){
       (dotColor ? '<span class="dot" style="background:'+dotColor+'"></span>' : '') +
       escapeHtml(label) +
     '</div>';
+  const isStreet = _alepoLayerMode === 'street';
   return '' +
     '<div class="alepo-map-wrap">' +
       '<div class="alepo-toolbar">' +
-        '<div class="alepo-toolbar-row">' +
+        /* ---- شريط موحّد: كل التبويبات والأزرار العلوية بنفس الخط ونفس الخانة ---- */
+        '<div class="alepo-tabsbar">' +
           '<div class="alepo-chips">' +
             chip('all', T('الكل')) +
             chip('hospitals', T('المشافي'), 'var(--alert)') +
             chip('landmarks', T('المعالم'), 'var(--primary)') +
           '</div>' +
-          '<div class="alepo-icon-btn" id="alepoLocateBtn" onclick="alepoLocateMe()" title="' + T('موقعي الحالي') + '">📍</div>' +
-          '<div class="alepo-icon-btn" id="alepoResetBtn" onclick="alepoResetView()" title="' + T('إعادة ضبط العرض') + '">🧭</div>' +
+          '<div class="alepo-tabsbar-sep"></div>' +
+          '<div class="alepo-tab-action' + (isStreet?' active':'') + '" id="alepoLayerTab" onclick="alepoToggleLayer()" title="' + T('نوع الخريطة') + '"><span class="ic">' + (isStreet?'🗺️':'🛰️') + '</span></div>' +
+          '<div class="alepo-tab-action" id="alepoFullscreenTab" onclick="alepoToggleFullscreen()" title="' + T('ملء الشاشة') + '"><span class="ic">⛶</span></div>' +
         '</div>' +
         '<div class="alepo-search-wrap">' +
           '<input type="text" id="alepoSearchInput" class="alepo-search-input" placeholder="' + T('ابحث عن مشفى أو معلم...') + '" autocomplete="off" oninput="alepoSearch(this.value)" onfocus="alepoSearch(this.value)">' +
@@ -4116,9 +4203,33 @@ function renderMapTab(){
           '<div class="alepo-search-results" id="alepoSearchResults"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="alepo-map-shell">' +
-        '<div id="alepoSatMap" class="alepo-map"></div>' +
-        '<div class="alepo-map-note">📡 ' + T('قمر صناعي') + '</div>' +
+      '<div class="alepo-map-shell" id="alepoMapShell">' +
+        '<div class="alepo-map-rotator" id="alepoMapRotator">' +
+          '<div id="alepoSatMap" class="alepo-map"></div>' +
+        '</div>' +
+        '<div class="alepo-map-note" id="alepoLayerNote" onclick="alepoToggleLayer()">' + (isStreet ? '🗺️ ' + T('خريطة الشوارع') : '📡 ' + T('قمر صناعي')) + '</div>' +
+        '<div class="alepo-fab-col tl">' +
+          '<div class="alepo-compass" id="alepoCompass" title="' + T('اسحب للتدوير، انقر لإعادة الضبط') + '">' +
+            '<div class="alepo-compass-face">' +
+              '<span class="alepo-compass-n">N</span>' +
+              '<div class="alepo-compass-needle"></div>' +
+              '<div class="alepo-compass-dot"></div>' +
+            '</div>' +
+            '<div class="alepo-compass-hint">' + T('اسحب للتدوير') + '</div>' +
+          '</div>' +
+          '<div class="alepo-fab-row">' +
+            '<div class="alepo-icon-btn" id="alepoLocateBtn" onclick="alepoLocateMe()" title="' + T('موقعي الحالي') + '">📍</div>' +
+            '<div class="alepo-loc-badge" id="alepoLocBadge" title="' + T('موقعك الحالي') + '"><span id="alepoLocBadgeText"></span></div>' +
+          '</div>' +
+          '<div class="alepo-icon-btn" id="alepoResetBtn" onclick="alepoResetView()" title="' + T('إعادة ضبط العرض') + '">🎯</div>' +
+        '</div>' +
+        '<div class="alepo-fab-col br">' +
+          '<div class="alepo-zoom-group">' +
+            '<div class="alepo-icon-btn" onclick="alepoZoom(1)" title="' + T('تكبير') + '">➕</div>' +
+            '<div class="alepo-icon-btn" onclick="alepoZoom(-1)" title="' + T('تصغير') + '">➖</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="alepo-scale" id="alepoScale"></div>' +
         '<div class="alepo-toast" id="alepoToast"></div>' +
       '</div>' +
     '</div>';
@@ -4155,21 +4266,173 @@ function alepoSetFilter(key){
   else if(_alepoMapInstance.hasLayer(_alepoLandmarksLayer)) _alepoMapInstance.removeLayer(_alepoLandmarksLayer);
 }
 
+/* ---------- تبديل نوع الخريطة: قمر صناعي ⇄ خريطة شوارع ---------- */
+function alepoToggleLayer(){
+  if(!_alepoMapInstance || !_alepoSatLayer || !_alepoStreetLayer) return;
+  _alepoLayerMode = (_alepoLayerMode === 'sat') ? 'street' : 'sat';
+  if(_alepoLayerMode === 'street'){
+    if(_alepoMapInstance.hasLayer(_alepoSatLayer)) _alepoMapInstance.removeLayer(_alepoSatLayer);
+    _alepoStreetLayer.addTo(_alepoMapInstance);
+    _alepoStreetLayer.bringToBack();
+  } else {
+    if(_alepoMapInstance.hasLayer(_alepoStreetLayer)) _alepoMapInstance.removeLayer(_alepoStreetLayer);
+    _alepoSatLayer.addTo(_alepoMapInstance);
+    _alepoSatLayer.bringToBack();
+  }
+  _alepoSyncLayerUI();
+}
+function _alepoSyncLayerUI(){
+  const isStreet = _alepoLayerMode === 'street';
+  const note = document.getElementById('alepoLayerNote');
+  const tab = document.getElementById('alepoLayerTab');
+  if(note) note.innerHTML = isStreet ? '🗺️ ' + T('خريطة الشوارع') : '📡 ' + T('قمر صناعي');
+  if(tab){
+    tab.classList.toggle('active', isStreet);
+    const ic = tab.querySelector('.ic');
+    if(ic) ic.textContent = isStreet ? '🗺️' : '🛰️';
+  }
+}
+
+/* ---------- ملء الشاشة ---------- */
+function alepoToggleFullscreen(){
+  const shell = document.getElementById('alepoMapShell');
+  const tab = document.getElementById('alepoFullscreenTab');
+  if(!shell) return;
+  shell.classList.toggle('fullscreen');
+  const isFull = shell.classList.contains('fullscreen');
+  if(tab){
+    tab.classList.toggle('active', isFull);
+    const ic = tab.querySelector('.ic');
+    if(ic) ic.textContent = isFull ? '✕' : '⛶';
+    tab.title = isFull ? T('إنهاء ملء الشاشة') : T('ملء الشاشة');
+  }
+  setTimeout(()=>{ if(_alepoMapInstance) _alepoMapInstance.invalidateSize(); }, 260);
+}
+
+/* ---------- تكبير/تصغير مخصص (بدل أدوات Leaflet الافتراضية التي كانت لتدور مع الخريطة) ---------- */
+function alepoZoom(delta){
+  if(!_alepoMapInstance) return;
+  _alepoMapInstance.setZoom(_alepoMapInstance.getZoom() + delta);
+}
+
+/* ---------- مقياس رسم مخصص ثابت الاتجاه دوماً (لا يدور مع الخريطة) ---------- */
+function _alepoUpdateScale(){
+  if(!_alepoMapInstance) return;
+  const el = document.getElementById('alepoScale');
+  if(!el) return;
+  const bounds = _alepoMapInstance.getBounds();
+  const size = _alepoMapInstance.getSize();
+  if(!size.x) return;
+  const centerLat = _alepoMapInstance.getCenter().lat;
+  const metersPerPx = (bounds.getEast() - bounds.getWest()) * 111320 * Math.cos(centerLat * Math.PI/180) / size.x;
+  if(!isFinite(metersPerPx) || metersPerPx<=0) return;
+  const maxMeters = metersPerPx * 90;
+  const niceValues = [10,20,50,100,200,500,1000,2000,5000,10000,20000,50000];
+  let val = niceValues[0];
+  for(const v of niceValues){ if(v <= maxMeters) val = v; else break; }
+  el.style.width = Math.max(24, Math.round(val / metersPerPx)) + 'px';
+  el.textContent = val >= 1000 ? (val/1000) + ' ' + T('كم') : val + ' ' + T('م');
+}
+
+/* ---------- تدوير الخريطة + البوصلة ---------- */
+/* حاوية الخريطة أكبر من الخانة الظاهرة بنسبة 145% (لتغطية الزوايا عند
+   التدوير)، لذا أي "ملاءمة حدود" (fitBounds) يجب أن تراعي الهامش الإضافي
+   حتى يطابق ما يظهر فعلياً للمستخدم داخل الخانة المرئية فقط */
+function _alepoRotatorPadding(){
+  if(!_alepoMapInstance) return L.point(0,0);
+  const size = _alepoMapInstance.getSize();
+  const frac = 0.225/1.45;
+  return L.point(size.x*frac, size.y*frac);
+}
+function _alepoApplyRotation(deg, live){
+  _alepoRotation = ((deg % 360) + 360) % 360;
+  const shell = document.getElementById('alepoMapShell');
+  const rotator = document.getElementById('alepoMapRotator');
+  if(shell) shell.style.setProperty('--map-rotate', _alepoRotation + 'deg');
+  if(rotator) rotator.classList.toggle('dragging', !!live);
+}
+function _alepoAngleFromCenter(cx, cy, x, y){
+  return Math.atan2(y - cy, x - cx) * 180 / Math.PI;
+}
+function _alepoWireCompass(){
+  const compass = document.getElementById('alepoCompass');
+  if(!compass) return;
+  compass.onpointerdown = function(e){
+    e.preventDefault();
+    const rect = compass.getBoundingClientRect();
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    const startAngle = _alepoAngleFromCenter(cx, cy, e.clientX, e.clientY);
+    const startRotation = _alepoRotation;
+    const startX = e.clientX, startY = e.clientY;
+    let moved = false;
+    compass.classList.add('dragging');
+    function move(ev){
+      if(Math.abs(ev.clientX-startX) > 3 || Math.abs(ev.clientY-startY) > 3) moved = true;
+      const ang = _alepoAngleFromCenter(cx, cy, ev.clientX, ev.clientY);
+      _alepoApplyRotation(startRotation + (ang - startAngle), true);
+    }
+    function up(){
+      compass.classList.remove('dragging');
+      const rotator = document.getElementById('alepoMapRotator');
+      if(rotator) rotator.classList.remove('dragging');
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      if(!moved) _alepoApplyRotation(0, false); /* نقرة بسيطة بدون سحب = إعادة الضبط للشمال */
+    }
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  };
+}
+function _alepoWireTwoFingerRotate(shellEl){
+  if(!shellEl) return;
+  let active = false, startAngle = 0, startRotation = 0;
+  function angleOfTouches(t){
+    return Math.atan2(t[1].clientY - t[0].clientY, t[1].clientX - t[0].clientX) * 180 / Math.PI;
+  }
+  shellEl.addEventListener('touchstart', function(e){
+    if(e.touches.length === 2){
+      active = true;
+      startAngle = angleOfTouches(e.touches);
+      startRotation = _alepoRotation;
+    }
+  }, { passive:true });
+  shellEl.addEventListener('touchmove', function(e){
+    if(active && e.touches.length === 2){
+      const ang = angleOfTouches(e.touches);
+      _alepoApplyRotation(startRotation + (ang - startAngle), true);
+    }
+  }, { passive:true });
+  shellEl.addEventListener('touchend', function(e){
+    if(active && e.touches.length < 2){
+      active = false;
+      const rotator = document.getElementById('alepoMapRotator');
+      if(rotator) rotator.classList.remove('dragging');
+    }
+  }, { passive:true });
+}
+
 function alepoSearch(q){
   const box = document.getElementById('alepoSearchResults');
   if(!box) return;
   q = (q||'').trim();
   if(!q){ box.classList.remove('show'); box.innerHTML=''; return; }
-  const matches = _alepoAllPlaces.filter(p => p.name.includes(q)).slice(0, 8);
+  const userLatLng = _alepoUserMarker ? _alepoUserMarker.getLatLng() : null;
+  let matches = _alepoAllPlaces.filter(p => p.name.includes(q));
+  if(userLatLng){
+    matches.forEach(p => { p._dist = _alepoDistanceKm(userLatLng.lat, userLatLng.lng, p.lat, p.lng); });
+    matches.sort((a,b)=> a._dist - b._dist);
+  }
+  matches = matches.slice(0, 8);
   if(!matches.length){
     box.innerHTML = '<div class="alepo-result-empty">' + T('لا توجد نتائج مطابقة') + '</div>';
   } else {
     box.innerHTML = matches.map((p,i) => {
       const bg = p.type==='hospital' ? 'var(--alert)' : 'var(--primary)';
       const icon = p.type==='hospital' ? '🏥' : p.icon;
+      const dist = (typeof p._dist === 'number') ? '<span class="alepo-result-dist">' + p._dist.toFixed(1) + ' ' + T('كم') + '</span>' : '';
       return '<div class="alepo-result-item" onclick="alepoGoToResult(' + i + ')" data-idx="' + i + '">' +
         '<span class="alepo-result-icon" style="background:' + bg + '">' + icon + '</span>' +
-        '<span>' + escapeHtml(p.name) + '</span>' +
+        '<span>' + escapeHtml(p.name) + '</span>' + dist +
       '</div>';
     }).join('');
     _alepoSearchMatches = matches;
@@ -4190,7 +4453,8 @@ function alepoGoToResult(i){
 
 function alepoResetView(){
   if(!_alepoMapInstance || !_alepoCityBounds) return;
-  _alepoMapInstance.flyToBounds(_alepoCityBounds, { duration:0.8 });
+  _alepoMapInstance.flyToBounds(_alepoCityBounds, { duration:0.8, padding:_alepoRotatorPadding() });
+  _alepoApplyRotation(0, false);
 }
 
 function alepoLocateMe(){
@@ -4205,13 +4469,18 @@ function alepoLocateMe(){
     return;
   }
   const btn = document.getElementById('alepoLocateBtn');
+  const badge = document.getElementById('alepoLocBadge');
+  const badgeText = document.getElementById('alepoLocBadgeText');
   if(btn) btn.classList.add('loading');
+  if(badge) badge.classList.add('show');
+  if(badgeText) badgeText.textContent = T('جارٍ التحديد...');
 
   const onSuccess = (pos)=>{
     if(btn) btn.classList.remove('loading');
-    const { latitude, longitude } = pos.coords;
+    const { latitude, longitude, accuracy } = pos.coords;
     if(!_alepoMapInstance) return;
     if(_alepoUserMarker){ try{ _alepoMapInstance.removeLayer(_alepoUserMarker); }catch(e){} }
+    if(_alepoAccuracyCircle){ try{ _alepoMapInstance.removeLayer(_alepoAccuracyCircle); }catch(e){} _alepoAccuracyCircle=null; }
     let nearest = null, nearestDist = Infinity;
     ALEPPO_HOSPITALS.forEach(h=>{
       const d = _alepoDistanceKm(latitude, longitude, h.lat, h.lng);
@@ -4219,21 +4488,28 @@ function alepoLocateMe(){
     });
     const insideCity = _alepoCityBounds && _alepoCityBounds.contains([latitude, longitude]);
     if(insideCity){
-      /* داخل حلب فعلاً — نحط نقطة موقعه ونطير الخريطة له مباشرة */
-      const userIcon = L.divIcon({ className:'alepo-user-icon', html:'<div class="alepo-user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9] });
+      /* داخل حلب فعلاً — نحط نقطة موقعه (مع دائرة دقة نبضة) ونطير الخريطة له مباشرة */
+      const userIcon = L.divIcon({ className:'alepo-user-icon', html:'<div class="alepo-user-wrap"><div class="alepo-user-pulse"></div><div class="alepo-user-dot"></div></div>', iconSize:[18,18], iconAnchor:[9,9] });
       _alepoUserMarker = L.marker([latitude, longitude], { icon:userIcon, zIndexOffset:1000 }).addTo(_alepoMapInstance);
+      if(accuracy){
+        _alepoAccuracyCircle = L.circle([latitude, longitude], { radius:accuracy, color:'#1d6fa5', weight:1, fillColor:'#1d6fa5', fillOpacity:0.12 }).addTo(_alepoMapInstance);
+      }
       _alepoMapInstance.flyTo([latitude, longitude], 15, { duration:0.9 });
+      if(badgeText) badgeText.textContent = latitude.toFixed(4) + ', ' + longitude.toFixed(4);
+      if(badge && accuracy) badge.title = T('دقة الموقع تقريباً') + ': ±' + Math.round(accuracy) + ' ' + T('م');
       if(nearest) _alepoShowToast('📍 ' + T('أقرب مشفى') + ': ' + nearest.name + ' — ' + nearestDist.toFixed(1) + ' ' + T('كم'));
     } else {
       /* خارج حلب — الخريطة محصورة بحدود المدينة فقط، فما نحرّكها لخارجها
          (كان يسبب قفزة مزعجة للخارج ثم ارتداد فوري للداخل). بدلها نعرض
          فقط أقرب مشفى ضمن المدينة، والخريطة تبقى ثابتة كما هي. */
+      if(badgeText) badgeText.textContent = T('أنت خارج حلب حالياً');
       if(nearest) _alepoShowToast('ℹ️ ' + T('أنت خارج حلب حالياً — أقرب مشفى داخل المدينة') + ': ' + nearest.name + ' (' + nearestDist.toFixed(0) + ' ' + T('كم') + ')');
       else _alepoShowToast('ℹ️ ' + T('أنت خارج حلب حالياً'));
     }
   };
   const onError = (err)=>{
     if(btn) btn.classList.remove('loading');
+    if(badge) badge.classList.remove('show');
     let msg;
     if(err && err.code === 1) msg = T('تم رفض إذن الموقع — فعّله من إعدادات المتصفح لهذا الموقع ثم أعد المحاولة');
     else if(err && err.code === 2) msg = T('تعذر تحديد موقعك حالياً، تحقق من تفعيل خدمة الموقع (GPS) بجوالك');
@@ -4249,11 +4525,37 @@ function alepoLocateMe(){
   });
 }
 
+/* رسم خط اتجاه من موقعك الحالي إلى أي معلم/مشفى على الخريطة */
+function alepoRouteToPoint(lat, lng){
+  if(!_alepoMapInstance) return;
+  if(!_alepoUserMarker){ _alepoShowToast('📍 ' + T('حدد موقعك أولاً')); alepoLocateMe(); return; }
+  const u = _alepoUserMarker.getLatLng();
+  if(_alepoDirectionLine){ try{ _alepoMapInstance.removeLayer(_alepoDirectionLine); }catch(e){} }
+  _alepoDirectionLine = L.polyline([[u.lat, u.lng], [lat, lng]], { color:'#1d6fa5', weight:3, dashArray:'6 8', opacity:0.85 }).addTo(_alepoMapInstance);
+  const pad = _alepoRotatorPadding();
+  _alepoMapInstance.fitBounds(_alepoDirectionLine.getBounds(), { paddingTopLeft:L.point(pad.x+40,pad.y+40), paddingBottomRight:L.point(pad.x+40,pad.y+40) });
+}
+
+function alepoCopyCoords(lat, lng){
+  const txt = lat.toFixed(5) + ', ' + lng.toFixed(5);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=> _alepoShowToast('📋 ' + T('تم نسخ الإحداثيات'))).catch(()=> _alepoShowToast(txt));
+  } else {
+    _alepoShowToast(txt);
+  }
+}
+
 function _alepoPopupHtml(item, isHospital){
   const dirUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + item.lat + ',' + item.lng;
-  return '<div class="alepo-popup-title">' + (isHospital ? '🏥 ' : (item.icon + ' ')) + escapeHtml(item.name) + '</div>' +
+  return '<div class="alepo-popup-inner">' +
+    '<div class="alepo-popup-title">' + (isHospital ? '🏥 ' : (item.icon + ' ')) + escapeHtml(item.name) + '</div>' +
     '<div class="alepo-popup-sub">' + (isHospital ? T('مشفى') : T('معلم')) + ' — ' + item.lat.toFixed(5) + ', ' + item.lng.toFixed(5) + '</div>' +
-    '<a class="alepo-popup-btn" href="' + dirUrl + '" target="_blank" rel="noopener">🧭 ' + T('الاتجاهات') + '</a>';
+    '<div class="alepo-popup-actions">' +
+      '<a class="alepo-popup-btn" href="' + dirUrl + '" target="_blank" rel="noopener">🧭 ' + T('الاتجاهات') + '</a>' +
+      '<button type="button" class="alepo-popup-btn secondary" onclick="alepoRouteToPoint(' + item.lat + ',' + item.lng + ')">📏 ' + T('خط على الخريطة') + '</button>' +
+      '<button type="button" class="alepo-popup-btn secondary" onclick="alepoCopyCoords(' + item.lat + ',' + item.lng + ')">📋</button>' +
+    '</div>' +
+  '</div>';
 }
 
 function initAlepoMap(){
@@ -4268,6 +4570,8 @@ function initAlepoMap(){
     try{ _alepoMapInstance.remove(); }catch(e){}
     _alepoMapInstance = null;
     _alepoUserMarker = null;
+    _alepoAccuracyCircle = null;
+    _alepoDirectionLine = null;
   }
 
   /* ربط أزرار الفلترة (مفوّضة من الحاوية الثابتة، تعمل حتى بعد إعادة البناء) */
@@ -4278,18 +4582,25 @@ function initAlepoMap(){
   const cityBounds = L.latLngBounds(ALEPPO_CITY_BOUNDS);
   _alepoCityBounds = cityBounds;
 
-  _alepoMapInstance = L.map('alepoSatMap', { zoomControl:true, attributionControl:false })
-    .fitBounds(cityBounds);
+  _alepoMapInstance = L.map('alepoSatMap', { zoomControl:false, attributionControl:false });
 
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  _alepoSatLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
     attribution: 'Esri, Maxar, Earthstar Geographics'
-  }).addTo(_alepoMapInstance);
+  });
+  _alepoStreetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    subdomains: 'abc',
+    attribution: 'OpenStreetMap'
+  });
+  (_alepoLayerMode === 'street' ? _alepoStreetLayer : _alepoSatLayer).addTo(_alepoMapInstance);
+  _alepoSyncLayerUI();
 
-  L.control.scale({ position:'bottomright', imperial:false }).addTo(_alepoMapInstance);
-
-  /* منع التصغير لأبعد من مستوى "المدينة كاملة"، ومنع تحريك الخريطة خارج حلب */
-  const minCityZoom = _alepoMapInstance.getBoundsZoom(cityBounds);
+  /* منع التصغير لأبعد من مستوى "المدينة كاملة"، ومنع تحريك الخريطة خارج حلب —
+     مع مراعاة هامش دوّار التدوير حتى تطابق "المدينة كاملة" ما يُعرض فعلياً */
+  const rotPad = _alepoRotatorPadding();
+  _alepoMapInstance.fitBounds(cityBounds, { padding: rotPad });
+  const minCityZoom = _alepoMapInstance.getBoundsZoom(cityBounds, false, rotPad);
   _alepoMapInstance.setMinZoom(minCityZoom);
   _alepoMapInstance.setMaxBounds(cityBounds.pad(0.05));
 
@@ -4305,13 +4616,13 @@ function initAlepoMap(){
   function placeMarker(item, isHospital){
     const pinIcon = L.divIcon({
       className: 'alepo-pin-wrap',
-      html: '<div class="alepo-pin ' + (isHospital?'hospital':'landmark') + '"><span class="alepo-pin-emoji">' + (isHospital?'🏥':item.icon) + '</span></div>',
+      html: '<div class="alepo-pin-counter"><div class="alepo-pin ' + (isHospital?'hospital':'landmark') + '"><span class="alepo-pin-emoji">' + (isHospital?'🏥':item.icon) + '</span></div></div>',
       iconSize:[32,32], iconAnchor:[16,31], popupAnchor:[0,-30]
     });
     const layer = isHospital ? _alepoHospitalsLayer : _alepoLandmarksLayer;
     const m = L.marker([item.lat, item.lng], { icon:pinIcon })
       .addTo(layer)
-      .bindTooltip(item.name, { permanent:false, direction:'top', offset:[0,-16], className:'alepo-marker-label' })
+      .bindTooltip('<span class="alepo-cr">' + escapeHtml(item.name) + '</span>', { permanent:false, direction:'top', offset:[0,-16], className:'alepo-marker-label' })
       .bindPopup(_alepoPopupHtml(item, isHospital), { className:'alepo-popup', closeButton:true });
     _alepoMarkers.push(m);
     _alepoAllPlaces.push({ name:item.name, lat:item.lat, lng:item.lng, type:isHospital?'hospital':'landmark', icon:item.icon||'📍', marker:m });
@@ -4329,7 +4640,15 @@ function initAlepoMap(){
   if(f==='all' || f==='landmarks') _alepoLandmarksLayer.addTo(_alepoMapInstance);
 
   _alepoMapInstance.on('zoomend', updateLabelVisibility);
+  _alepoMapInstance.on('zoomend move', _alepoUpdateScale);
   updateLabelVisibility();
+  _alepoUpdateScale();
+
+  /* تدوير الخريطة: بوصلة قابلة للسحب + إيماءة إصبعين مباشرة على الخريطة */
+  _alepoApplyRotation(_alepoRotation, false);
+  _alepoWireCompass();
+  const shellEl = document.getElementById('alepoMapShell');
+  _alepoWireTwoFingerRotate(shellEl);
 
   /* الحاوية مبنية داخل عنصر بدأ height:0 لحظة التهيئة أحياناً (قبل انتهاء
      الرسم)، فنطلب من Leaflet يعيد حساب المقاس بعد الإطار التالي لضمان
@@ -4337,9 +4656,11 @@ function initAlepoMap(){
   setTimeout(() => {
     if(_alepoMapInstance){
       _alepoMapInstance.invalidateSize();
-      _alepoMapInstance.fitBounds(cityBounds);
-      _alepoMapInstance.setMinZoom(_alepoMapInstance.getBoundsZoom(cityBounds));
+      const pad = _alepoRotatorPadding();
+      _alepoMapInstance.fitBounds(cityBounds, { padding: pad });
+      _alepoMapInstance.setMinZoom(_alepoMapInstance.getBoundsZoom(cityBounds, false, pad));
       updateLabelVisibility();
+      _alepoUpdateScale();
     }
   }, 150);
 
